@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/zenful-ai/eureka"
+	"github.com/dburkart/eureka"
 	"log/slog"
 	"os"
 )

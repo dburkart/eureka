@@ -1,3 +1,3 @@
-module github.com/zenful-ai/eureka
+module github.com/dburkart/eureka
 
 go 1.23.1
