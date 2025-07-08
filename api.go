@@ -181,6 +181,10 @@ func (p *ProductAPIRequest) First(product *Product) error {
 	return err
 }
 
+type ProductListResponse struct {
+	Products []Product `json:"products"`
+}
+
 func (p *ProductAPIRequest) List(products *[]Product) error {
 	var request Request[ProductListResponse]
 
@@ -204,6 +208,10 @@ type IdeaAPIRequest struct {
 	product *Product
 }
 
+func (c *AhaClient) Ideas() *IdeaAPIRequest {
+	return &IdeaAPIRequest{client: c}
+}
+
 func (i *IdeaAPIRequest) For(product *Product) *IdeaAPIRequest {
 	if product != nil && product.ID != "" {
 		i.product = product
@@ -224,6 +232,10 @@ func (i *IdeaAPIRequest) First(idea *Idea) error {
 	return err
 }
 
+type IdeaListResponse struct {
+	Ideas []Idea `json:"ideas"`
+}
+
 func (i *IdeaAPIRequest) List(ideas *[]Idea) error {
 	var request Request[IdeaListResponse]
 
@@ -232,7 +244,7 @@ func (i *IdeaAPIRequest) List(ideas *[]Idea) error {
 		panic(err)
 	}
 
-	if i.product.ID != "" {
+	if i.product != nil && i.product.ID != "" {
 		r, err = i.client.newRequest(http.MethodGet, fmt.Sprintf("products/%s/ideas", i.product.ID), nil)
 	}
 
@@ -242,6 +254,44 @@ func (i *IdeaAPIRequest) List(ideas *[]Idea) error {
 	})
 }
 
-func (c *AhaClient) Ideas() *IdeaAPIRequest {
-	return &IdeaAPIRequest{client: c}
+//
+// Release endpoints
+//
+
+type ReleaseAPIRequest struct {
+	client  *AhaClient
+	product *Product
+}
+
+func (c *AhaClient) Releases() *ReleaseAPIRequest {
+	return &ReleaseAPIRequest{client: c}
+}
+
+type ReleaseListResponse struct {
+	Releases []Release `json:"releases"`
+}
+
+func (r *ReleaseAPIRequest) For(product *Product) *ReleaseAPIRequest {
+	if r.product != nil && product.ID != "" {
+		r.product = product
+	}
+	return r
+}
+
+func (r *ReleaseAPIRequest) List(releases *[]Release) error {
+	var request Request[ReleaseListResponse]
+
+	req, err := r.client.newRequest(http.MethodGet, "releases", nil)
+	if err != nil {
+		return err
+	}
+
+	if r.product != nil && r.product.ID != "" {
+		req, err = r.client.newRequest(http.MethodGet, fmt.Sprintf("products/%s/releases", r.product.ID), nil)
+	}
+
+	request.request = req
+	return request.ForEach(func(resp *ReleaseListResponse) {
+		*releases = append(*releases, resp.Releases...)
+	})
 }

@@ -12,7 +12,3 @@ type Product struct {
 	WorkspaceType   string    `json:"workspace_type"`
 	URL             string    `json:"url"`
 }
-
-type ProductListResponse struct {
-	Products []Product `json:"products"`
-}

@@ -27,11 +27,17 @@ func main() {
 
 	for _, product := range products {
 		var ideas []eureka.Idea
+		var releases []eureka.Release
 
 		err = client.Ideas().For(&product).List(&ideas)
 
 		if err != nil {
 			slog.Error("ListIdeas error:", err)
+		}
+
+		err = client.Releases().For(&product).List(&releases)
+		if err != nil {
+			slog.Error("ListReleases error:", err)
 		}
 	}
 }

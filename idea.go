@@ -55,7 +55,3 @@ type CustomObjectLink struct {
 	RecordType string `json:"record_type,omitempty"`
 	RecordIds  []int  `json:"record_ids,omitempty"`
 }
-
-type IdeaListResponse struct {
-	Ideas []Idea `json:"ideas"`
-}
