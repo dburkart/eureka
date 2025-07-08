@@ -168,6 +168,19 @@ func (c *AhaClient) Products() *ProductAPIRequest {
 	return &ProductAPIRequest{c}
 }
 
+func (p *ProductAPIRequest) First(product *Product) error {
+	var request Request[Product]
+
+	r, err := p.client.newRequest(http.MethodGet, fmt.Sprintf("products/%s", product.ID), nil)
+	if err != nil {
+		panic(err)
+	}
+
+	request.request = r
+	_, err = request.Do(product)
+	return err
+}
+
 func (p *ProductAPIRequest) List(products *[]Product) error {
 	var request Request[ProductListResponse]
 
@@ -186,13 +199,16 @@ func (p *ProductAPIRequest) List(products *[]Product) error {
 // Idea endpoints
 //
 
-type IdeasAPIOptions struct {
-	ProductID *string
+type IdeaAPIRequest struct {
+	client  *AhaClient
+	product *Product
 }
 
-type IdeaAPIRequest struct {
-	options *IdeasAPIOptions
-	client  *AhaClient
+func (i *IdeaAPIRequest) For(product *Product) *IdeaAPIRequest {
+	if product != nil && product.ID != "" {
+		i.product = product
+	}
+	return i
 }
 
 func (i *IdeaAPIRequest) First(idea *Idea) error {
@@ -216,8 +232,8 @@ func (i *IdeaAPIRequest) List(ideas *[]Idea) error {
 		panic(err)
 	}
 
-	if i.options.ProductID != nil {
-		r, err = i.client.newRequest(http.MethodGet, fmt.Sprintf("products/%s/ideas", *i.options.ProductID), nil)
+	if i.product.ID != "" {
+		r, err = i.client.newRequest(http.MethodGet, fmt.Sprintf("products/%s/ideas", i.product.ID), nil)
 	}
 
 	request.request = r
@@ -226,6 +242,6 @@ func (i *IdeaAPIRequest) List(ideas *[]Idea) error {
 	})
 }
 
-func (c *AhaClient) Ideas(options *IdeasAPIOptions) *IdeaAPIRequest {
-	return &IdeaAPIRequest{options: options, client: c}
+func (c *AhaClient) Ideas() *IdeaAPIRequest {
+	return &IdeaAPIRequest{client: c}
 }

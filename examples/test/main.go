@@ -28,9 +28,7 @@ func main() {
 	for _, product := range products {
 		var ideas []eureka.Idea
 
-		err = client.Ideas(&eureka.IdeasAPIOptions{
-			ProductID: &product.ID,
-		}).List(&ideas)
+		err = client.Ideas().For(&product).List(&ideas)
 
 		if err != nil {
 			slog.Error("ListIdeas error:", err)
