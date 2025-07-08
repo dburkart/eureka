@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 type Request[T any] struct {
@@ -33,6 +34,73 @@ func (r *Request[T]) Do() (*T, error) {
 	}
 
 	return &data, nil
+}
+
+func (r *Request[T]) DoAll(c chan *T, e chan error) {
+	go func() {
+		defer close(c)
+		defer close(e)
+
+		for {
+			var data T
+			var pagination PaginatedResponse
+			response, err := http.DefaultClient.Do(r.request)
+			if err != nil {
+				e <- err
+			}
+			defer response.Body.Close()
+
+			b, err := io.ReadAll(response.Body)
+			if err != nil {
+				e <- err
+			}
+
+			err = json.Unmarshal(b, &data)
+			if err != nil {
+				e <- err
+			}
+
+			// Send it over
+			c <- &data
+
+			err = json.Unmarshal(b, &pagination)
+			if err != nil {
+				e <- err
+			}
+
+			if pagination.Pagination.CurrentPage < pagination.Pagination.TotalPages {
+				v := r.request.URL.Query()
+				v.Set("page", strconv.Itoa(pagination.Pagination.CurrentPage+1))
+
+				r.request.URL.RawQuery = v.Encode()
+			} else {
+				break
+			}
+		}
+	}()
+}
+
+func (r *Request[T]) ForEach(callback func(*T)) error {
+	var c = make(chan *T)
+	var e = make(chan error)
+
+	r.DoAll(c, e)
+
+	for {
+		select {
+		case resp := <-c:
+			if resp == nil {
+				return nil
+			}
+
+			callback(resp)
+		case err := <-e:
+			if err == nil {
+				return nil
+			}
+			return err
+		}
+	}
 }
 
 type AhaClientOptions struct {

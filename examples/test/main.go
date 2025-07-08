@@ -26,14 +26,16 @@ func main() {
 	}
 
 	for _, product := range response.Products {
-		ideas, err := client.ListIdeas(&eureka.ListIdeasOptions{
+		var ideas []eureka.Idea
+
+		err = client.ListIdeas(&eureka.ListIdeasOptions{
 			ProductId: &product.ID,
-		}).Do()
+		}).ForEach(func(response *eureka.IdeaListResponse) {
+			ideas = append(ideas, response.Ideas...)
+		})
 		if err != nil {
 			slog.Error("ListIdeas error:", err)
 		}
-
-		fmt.Println(ideas)
 	}
 
 	fmt.Println(response)
