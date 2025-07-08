@@ -1,0 +1,176 @@
+package eureka
+
+import "time"
+
+type Feature struct {
+	ID                           string                `json:"id"`
+	Name                         string                `json:"name,omitempty"`
+	ReferenceNum                 string                `json:"reference_num,omitempty"`
+	InitiativeReferenceNum       string                `json:"initiative_reference_num,omitempty"`
+	ReleaseReferenceNum          string                `json:"release_reference_num,omitempty"`
+	EpicReferenceNum             string                `json:"epic_reference_num,omitempty"`
+	Position                     int                   `json:"position,omitempty"`
+	Score                        int                   `json:"score,omitempty"`
+	CreatedAt                    time.Time             `json:"created_at,omitempty"`
+	UpdatedAt                    time.Time             `json:"updated_at,omitempty"`
+	StartDate                    string                `json:"start_date,omitempty"`
+	DueDate                      string                `json:"due_date,omitempty"`
+	ProductID                    string                `json:"product_id,omitempty"`
+	Progress                     any                   `json:"progress,omitempty"`
+	ProgressSource               string                `json:"progress_source,omitempty"`
+	StatusChangedOn              any                   `json:"status_changed_on,omitempty"`
+	Description                  Description           `json:"description,omitempty"`
+	Attachments                  []any                 `json:"attachments,omitempty"`
+	IntegrationFields            []IntegrationField    `json:"integration_fields,omitempty"`
+	URL                          string                `json:"url,omitempty"`
+	Resource                     string                `json:"resource,omitempty"`
+	Release                      Release               `json:"release,omitempty"`
+	MasterFeature                MasterFeature         `json:"master_feature,omitempty"`
+	BelongsToReleasePhase        BelongsToReleasePhase `json:"belongs_to_release_phase,omitempty"`
+	Epic                         Epic                  `json:"epic,omitempty"`
+	AssignedToUser               AssignedToUser        `json:"assigned_to_user,omitempty"`
+	Requirements                 []Requirement         `json:"requirements,omitempty"`
+	Initiative                   Initiative            `json:"initiative,omitempty"`
+	Goals                        []Goal                `json:"goals,omitempty"`
+	KeyResults                   []KeyResult           `json:"key_results,omitempty"`
+	CommentsCount                int                   `json:"comments_count,omitempty"`
+	ScoreFacts                   []ScoreFact           `json:"score_facts,omitempty"`
+	Tags                         []string              `json:"tags,omitempty"`
+	FullTags                     []FullTag             `json:"full_tags,omitempty"`
+	FeatureLinks                 []FeatureLink         `json:"feature_links,omitempty"`
+	FeatureOnlyOriginalEstimate  any                   `json:"feature_only_original_estimate,omitempty"`
+	FeatureOnlyRemainingEstimate any                   `json:"feature_only_remaining_estimate,omitempty"`
+	FeatureOnlyWorkDone          any                   `json:"feature_only_work_done,omitempty"`
+}
+
+type MasterFeature struct {
+	ID           string    `json:"id"`
+	ReferenceNum string    `json:"reference_num,omitempty"`
+	Name         string    `json:"name,omitempty"`
+	CreatedAt    time.Time `json:"created_at,omitempty"`
+	URL          string    `json:"url,omitempty"`
+	Resource     string    `json:"resource,omitempty"`
+}
+
+type BelongsToReleasePhase struct {
+	ID             string      `json:"id"`
+	Name           string      `json:"name,omitempty"`
+	StartOn        string      `json:"start_on,omitempty"`
+	EndOn          string      `json:"end_on,omitempty"`
+	Type           string      `json:"type,omitempty"`
+	ReleaseID      int         `json:"release_id,omitempty"`
+	CreatedAt      time.Time   `json:"created_at,omitempty"`
+	UpdatedAt      time.Time   `json:"updated_at,omitempty"`
+	Progress       any         `json:"progress,omitempty"`
+	ProgressSource string      `json:"progress_source,omitempty"`
+	DurationSource string      `json:"duration_source,omitempty"`
+	Description    Description `json:"description,omitempty"`
+}
+
+type AssignedToUser struct {
+	ID              string    `json:"id"`
+	Name            string    `json:"name,omitempty"`
+	Email           string    `json:"email,omitempty"`
+	CreatedAt       time.Time `json:"created_at,omitempty"`
+	UpdatedAt       time.Time `json:"updated_at,omitempty"`
+	DefaultAssignee bool      `json:"default_assignee,omitempty"`
+}
+
+type User struct {
+	ID        string    `json:"id"`
+	Name      string    `json:"name,omitempty"`
+	Email     string    `json:"email,omitempty"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+}
+
+type Requirement struct {
+	ID                string         `json:"id"`
+	Name              string         `json:"name,omitempty"`
+	ReferenceNum      string         `json:"reference_num,omitempty"`
+	Position          int            `json:"position,omitempty"`
+	CreatedAt         time.Time      `json:"created_at,omitempty"`
+	UpdatedAt         time.Time      `json:"updated_at,omitempty"`
+	ReleaseID         int            `json:"release_id,omitempty"`
+	CreatedByUser     User           `json:"created_by_user,omitempty"`
+	WorkflowStatus    WorkflowStatus `json:"workflow_status,omitempty"`
+	URL               string         `json:"url,omitempty"`
+	Resource          string         `json:"resource,omitempty"`
+	Description       Description    `json:"description,omitempty"`
+	Feature           Feature        `json:"feature,omitempty"`
+	AssignedToUser    AssignedToUser `json:"assigned_to_user,omitempty"`
+	Attachments       []any          `json:"attachments,omitempty"`
+	Tags              []any          `json:"tags,omitempty"`
+	FullTags          []any          `json:"full_tags,omitempty"`
+	CustomFields      []any          `json:"custom_fields,omitempty"`
+	IntegrationFields []any          `json:"integration_fields,omitempty"`
+	CommentsCount     int            `json:"comments_count,omitempty"`
+}
+
+type Initiative struct {
+	ID                string             `json:"id"`
+	ReferenceNum      string             `json:"reference_num,omitempty"`
+	Name              string             `json:"name,omitempty"`
+	URL               string             `json:"url,omitempty"`
+	Resource          string             `json:"resource,omitempty"`
+	CreatedAt         time.Time          `json:"created_at,omitempty"`
+	Description       Description        `json:"description,omitempty"`
+	IntegrationFields []IntegrationField `json:"integration_fields,omitempty"`
+}
+
+type Goal struct {
+	ID          string      `json:"id"`
+	Name        string      `json:"name,omitempty"`
+	URL         string      `json:"url,omitempty"`
+	Resource    string      `json:"resource,omitempty"`
+	CreatedAt   time.Time   `json:"created_at,omitempty"`
+	Description Description `json:"description,omitempty"`
+}
+
+type KeyResult struct {
+	ID             string    `json:"id"`
+	Name           string    `json:"name,omitempty"`
+	ReferenceNum   string    `json:"reference_num,omitempty"`
+	URL            string    `json:"url,omitempty"`
+	Position       int       `json:"position,omitempty"`
+	CreatedAt      time.Time `json:"created_at,omitempty"`
+	UpdatedAt      time.Time `json:"updated_at,omitempty"`
+	Progress       any       `json:"progress,omitempty"`
+	TargetMetric   string    `json:"target_metric,omitempty"`
+	StartingMetric string    `json:"starting_metric,omitempty"`
+	CurrentMetric  string    `json:"current_metric,omitempty"`
+}
+
+type FullTag struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name,omitempty"`
+	Color string `json:"color,omitempty"`
+}
+
+type ParentRecord struct {
+	ID           string    `json:"id"`
+	ReferenceNum string    `json:"reference_num,omitempty"`
+	Name         string    `json:"name,omitempty"`
+	CreatedAt    time.Time `json:"created_at,omitempty"`
+	URL          string    `json:"url,omitempty"`
+	Resource     string    `json:"resource,omitempty"`
+	ProductID    string    `json:"product_id,omitempty"`
+}
+
+type ChildRecord struct {
+	ID           string    `json:"id"`
+	ReferenceNum string    `json:"reference_num,omitempty"`
+	Name         string    `json:"name,omitempty"`
+	CreatedAt    time.Time `json:"created_at,omitempty"`
+	URL          string    `json:"url,omitempty"`
+	Resource     string    `json:"resource,omitempty"`
+	ProductID    string    `json:"product_id,omitempty"`
+}
+
+type FeatureLink struct {
+	LinkType     string       `json:"link_type,omitempty"`
+	LinkTypeID   int          `json:"link_type_id,omitempty"`
+	CreatedAt    time.Time    `json:"created_at,omitempty"`
+	ParentRecord ParentRecord `json:"parent_record,omitempty"`
+	ChildRecord  ChildRecord  `json:"child_record,omitempty"`
+}
