@@ -6,6 +6,6 @@ type Pagination struct {
 	CurrentPage  int `json:"current_page"`
 }
 
-type APIResponse struct {
+type PaginatedResponse struct {
 	Pagination Pagination `json:"pagination"`
 }
