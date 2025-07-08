@@ -271,6 +271,19 @@ type ReleaseListResponse struct {
 	Releases []Release `json:"releases"`
 }
 
+func (r *ReleaseAPIRequest) First(release *Release) error {
+	var request Request[Release]
+
+	req, err := r.client.newRequest(http.MethodGet, fmt.Sprintf("releases/%s", release.ID), nil)
+	if err != nil {
+		return err
+	}
+
+	request.request = req
+	_, err = request.Do(release)
+	return err
+}
+
 func (r *ReleaseAPIRequest) For(product *Product) *ReleaseAPIRequest {
 	if r.product != nil && product.ID != "" {
 		r.product = product
