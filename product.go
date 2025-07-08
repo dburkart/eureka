@@ -14,6 +14,5 @@ type Product struct {
 }
 
 type ProductListResponse struct {
-	PaginatedResponse
 	Products []Product `json:"products"`
 }

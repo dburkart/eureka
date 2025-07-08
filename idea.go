@@ -57,6 +57,5 @@ type CustomObjectLink struct {
 }
 
 type IdeaListResponse struct {
-	PaginatedResponse
 	Ideas []Idea `json:"ideas"`
 }

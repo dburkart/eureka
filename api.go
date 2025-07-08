@@ -15,7 +15,7 @@ type Request[T any] struct {
 	responseFormat T
 }
 
-func (r *Request[T]) Do() (*T, error) {
+func (r *Request[T]) Do(t *T) (*T, error) {
 	var data T
 	response, err := http.DefaultClient.Do(r.request)
 	if err != nil {
@@ -28,12 +28,21 @@ func (r *Request[T]) Do() (*T, error) {
 		return nil, err
 	}
 
-	err = json.Unmarshal(b, &data)
-	if err != nil {
-		return nil, err
-	}
+	if t == nil {
+		err = json.Unmarshal(b, &data)
+		if err != nil {
+			return nil, err
+		}
 
-	return &data, nil
+		return &data, nil
+	} else {
+		err = json.Unmarshal(b, t)
+		if err != nil {
+			return nil, err
+		}
+
+		return t, nil
+	}
 }
 
 func (r *Request[T]) DoAll(c chan *T, e chan error) {
@@ -151,39 +160,72 @@ func (c *AhaClient) newRequest(method, endpoint string, body io.Reader) (*http.R
 // Product endpoints
 //
 
-func (c *AhaClient) ListProducts() *Request[ProductListResponse] {
+type ProductAPIRequest struct {
+	client *AhaClient
+}
+
+func (c *AhaClient) Products() *ProductAPIRequest {
+	return &ProductAPIRequest{c}
+}
+
+func (p *ProductAPIRequest) List(products *[]Product) error {
 	var request Request[ProductListResponse]
 
-	r, err := c.newRequest(http.MethodGet, "products", nil)
+	r, err := p.client.newRequest(http.MethodGet, "products", nil)
 	if err != nil {
 		panic(err)
 	}
 
 	request.request = r
-	return &request
+	return request.ForEach(func(resp *ProductListResponse) {
+		*products = append(*products, resp.Products...)
+	})
 }
 
 //
 // Idea endpoints
 //
 
-type ListIdeasOptions struct {
-	ProductId *string `json:"product_id,omitempty"`
+type IdeasAPIOptions struct {
+	ProductID *string
 }
 
-func (c *AhaClient) ListIdeas(options *ListIdeasOptions) *Request[IdeaListResponse] {
+type IdeaAPIRequest struct {
+	options *IdeasAPIOptions
+	client  *AhaClient
+}
+
+func (i *IdeaAPIRequest) First(idea *Idea) error {
+	var request Request[Idea]
+
+	r, err := i.client.newRequest(http.MethodGet, fmt.Sprintf("ideas/%s", idea.ID), nil)
+	if err != nil {
+		return err
+	}
+
+	request.request = r
+	_, err = request.Do(idea)
+	return err
+}
+
+func (i *IdeaAPIRequest) List(ideas *[]Idea) error {
 	var request Request[IdeaListResponse]
 
-	r, err := c.newRequest(http.MethodGet, "ideas", nil)
+	r, err := i.client.newRequest(http.MethodGet, "ideas", nil)
 	if err != nil {
 		panic(err)
 	}
 
-	if options.ProductId != nil {
-		r, err = c.newRequest(http.MethodGet, fmt.Sprintf("products/%s/ideas", *options.ProductId), nil)
+	if i.options.ProductID != nil {
+		r, err = i.client.newRequest(http.MethodGet, fmt.Sprintf("products/%s/ideas", *i.options.ProductID), nil)
 	}
 
 	request.request = r
+	return request.ForEach(func(resp *IdeaListResponse) {
+		*ideas = append(*ideas, resp.Ideas...)
+	})
+}
 
-	return &request
+func (c *AhaClient) Ideas(options *IdeasAPIOptions) *IdeaAPIRequest {
+	return &IdeaAPIRequest{options: options, client: c}
 }

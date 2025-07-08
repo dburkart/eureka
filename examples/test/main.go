@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/dburkart/eureka"
 	"log/slog"
 	"os"
@@ -19,24 +18,22 @@ func main() {
 		ApiKey:      apiToken,
 	})
 
-	response, err := client.ListProducts().Do()
+	var products []eureka.Product
+	err := client.Products().List(&products)
 	if err != nil {
 		slog.Error("ListProducts error:", err)
 		os.Exit(1)
 	}
 
-	for _, product := range response.Products {
+	for _, product := range products {
 		var ideas []eureka.Idea
 
-		err = client.ListIdeas(&eureka.ListIdeasOptions{
-			ProductId: &product.ID,
-		}).ForEach(func(response *eureka.IdeaListResponse) {
-			ideas = append(ideas, response.Ideas...)
-		})
+		err = client.Ideas(&eureka.IdeasAPIOptions{
+			ProductID: &product.ID,
+		}).List(&ideas)
+
 		if err != nil {
 			slog.Error("ListIdeas error:", err)
 		}
 	}
-
-	fmt.Println(response)
 }
