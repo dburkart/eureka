@@ -2,6 +2,14 @@ package eureka
 
 import "time"
 
+type RefObject struct {
+	ID           string    `json:"id"`
+	ReferenceNum string    `json:"reference_num"`
+	CreatedAt    time.Time `json:"created_at,omitempty"`
+	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	Name         string    `json:"name,omitempty"`
+}
+
 type Attachments struct {
 	ID               string    `json:"id"`
 	DownloadURL      string    `json:"download_url,omitempty"`
@@ -70,6 +78,6 @@ type CustomField struct {
 	CreatedAt   time.Time `json:"created_at,omitempty"`
 	UpdatedAt   time.Time `json:"updated_at,omitempty"`
 	Attachments []any     `json:"attachments,omitempty"`
-	Value       string    `json:"value,omitempty"`
+	Value       any       `json:"value,omitempty"`
 	Type        string    `json:"type,omitempty"`
 }
