@@ -4,39 +4,39 @@ import "time"
 
 type Feature struct {
 	RefObject
-	AssignedToUser               AssignedToUser        `json:"assigned_to_user,omitempty"`
-	Attachments                  []any                 `json:"attachments,omitempty"`
-	BelongsToReleasePhase        BelongsToReleasePhase `json:"belongs_to_release_phase,omitempty"`
-	CommentsCount                int                   `json:"comments_count,omitempty"`
-	Description                  Description           `json:"description,omitempty"`
-	DueDate                      string                `json:"due_date,omitempty"`
-	Epic                         Epic                  `json:"epic,omitempty"`
-	EpicReferenceNum             string                `json:"epic_reference_num,omitempty"`
-	FeatureLinks                 []FeatureLink         `json:"feature_links,omitempty"`
-	FeatureOnlyOriginalEstimate  any                   `json:"feature_only_original_estimate,omitempty"`
-	FeatureOnlyRemainingEstimate any                   `json:"feature_only_remaining_estimate,omitempty"`
-	FeatureOnlyWorkDone          any                   `json:"feature_only_work_done,omitempty"`
-	FullTags                     []FullTag             `json:"full_tags,omitempty"`
-	Goals                        []Goal                `json:"goals,omitempty"`
-	Initiative                   Initiative            `json:"initiative,omitempty"`
-	InitiativeReferenceNum       string                `json:"initiative_reference_num,omitempty"`
-	IntegrationFields            []IntegrationField    `json:"integration_fields,omitempty"`
-	KeyResults                   []KeyResult           `json:"key_results,omitempty"`
-	MasterFeature                MasterFeature         `json:"master_feature,omitempty"`
-	Position                     int                   `json:"position,omitempty"`
-	ProductID                    string                `json:"product_id,omitempty"`
-	Progress                     any                   `json:"progress,omitempty"`
-	ProgressSource               string                `json:"progress_source,omitempty"`
-	Release                      Release               `json:"release,omitempty"`
-	ReleaseReferenceNum          string                `json:"release_reference_num,omitempty"`
-	Requirements                 []Requirement         `json:"requirements,omitempty"`
-	Resource                     string                `json:"resource,omitempty"`
-	Score                        int                   `json:"score,omitempty"`
-	ScoreFacts                   []ScoreFact           `json:"score_facts,omitempty"`
-	StartDate                    string                `json:"start_date,omitempty"`
-	StatusChangedOn              any                   `json:"status_changed_on,omitempty"`
-	Tags                         []string              `json:"tags,omitempty"`
-	URL                          string                `json:"url,omitempty"`
+	AssignedToUser               AssignedToUser     `json:"assigned_to_user,omitempty"`
+	Attachments                  []any              `json:"attachments,omitempty"`
+	BelongsToReleasePhase        ReleasePhase       `json:"belongs_to_release_phase,omitempty"`
+	CommentsCount                int                `json:"comments_count,omitempty"`
+	Description                  Description        `json:"description,omitempty"`
+	DueDate                      string             `json:"due_date,omitempty"`
+	Epic                         Epic               `json:"epic,omitempty"`
+	EpicReferenceNum             string             `json:"epic_reference_num,omitempty"`
+	FeatureLinks                 []FeatureLink      `json:"feature_links,omitempty"`
+	FeatureOnlyOriginalEstimate  any                `json:"feature_only_original_estimate,omitempty"`
+	FeatureOnlyRemainingEstimate any                `json:"feature_only_remaining_estimate,omitempty"`
+	FeatureOnlyWorkDone          any                `json:"feature_only_work_done,omitempty"`
+	FullTags                     []FullTag          `json:"full_tags,omitempty"`
+	Goals                        []Goal             `json:"goals,omitempty"`
+	Initiative                   Initiative         `json:"initiative,omitempty"`
+	InitiativeReferenceNum       string             `json:"initiative_reference_num,omitempty"`
+	IntegrationFields            []IntegrationField `json:"integration_fields,omitempty"`
+	KeyResults                   []KeyResult        `json:"key_results,omitempty"`
+	MasterFeature                MasterFeature      `json:"master_feature,omitempty"`
+	Position                     int                `json:"position,omitempty"`
+	ProductID                    string             `json:"product_id,omitempty"`
+	Progress                     any                `json:"progress,omitempty"`
+	ProgressSource               string             `json:"progress_source,omitempty"`
+	Release                      Release            `json:"release,omitempty"`
+	ReleaseReferenceNum          string             `json:"release_reference_num,omitempty"`
+	Requirements                 []Requirement      `json:"requirements,omitempty"`
+	Resource                     string             `json:"resource,omitempty"`
+	Score                        int                `json:"score,omitempty"`
+	ScoreFacts                   []ScoreFact        `json:"score_facts,omitempty"`
+	StartDate                    string             `json:"start_date,omitempty"`
+	StatusChangedOn              any                `json:"status_changed_on,omitempty"`
+	Tags                         []string           `json:"tags,omitempty"`
+	URL                          string             `json:"url,omitempty"`
 }
 
 type MasterFeature struct {
@@ -48,7 +48,7 @@ type MasterFeature struct {
 	Resource     string    `json:"resource,omitempty"`
 }
 
-type BelongsToReleasePhase struct {
+type ReleasePhase struct {
 	ID             string      `json:"id"`
 	Name           string      `json:"name,omitempty"`
 	StartOn        string      `json:"start_on,omitempty"`
