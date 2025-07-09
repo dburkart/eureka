@@ -3,7 +3,7 @@
 Ergonomic library for the [Aha! API](https://www.aha.io/api).
 
 > [!CAUTION]
-> This library is a Work in Progress
+> This library is a Work in Progress, see the To-Do List below.
 
 ## Installing
 
@@ -45,3 +45,20 @@ func main() {
 }
 
 ```
+
+## To-Do List
+
+Currently, the goal isn't exhaustive API support. Instead, we're aiming to support major operations (Get, List, Update) on the major "Objects" in Aha!.
+
+See the checklist below for a basic roadmap of what we're prioritizing.
+
+- [x] Pagination
+- [x] API Token Support
+- [ ] OAuth
+- [ ] Major API support
+  - [ ] Products
+  - [ ] Ideas
+  - [ ] Features
+  - [ ] Goals
+  - [ ] Initiatives
+  - [ ] Releases
