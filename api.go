@@ -398,7 +398,7 @@ func (c *CommentAPIRequest) List(comments *[]Comment) error {
 	}
 
 	if c.urlFragment == "" {
-		return errors.New("cannot create comment without first calling For()")
+		return errors.New("cannot list comments without first calling For()")
 	}
 
 	r, err := c.client.newRequest(http.MethodGet, c.urlFragment, nil)
