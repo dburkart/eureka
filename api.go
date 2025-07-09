@@ -1,8 +1,10 @@
 package eureka
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -321,5 +323,92 @@ func (r *ReleaseAPIRequest) List(releases *[]Release) error {
 	request.request = req
 	return request.ForEach(func(resp *ReleaseListResponse) {
 		*releases = append(*releases, resp.Releases...)
+	})
+}
+
+//
+// Comments
+//
+
+type CommentAPIRequest struct {
+	Error       error
+	client      *AhaClient
+	urlFragment string
+}
+
+func (c *AhaClient) Comments() *CommentAPIRequest {
+	return &CommentAPIRequest{client: c}
+}
+
+func (c *CommentAPIRequest) For(resource any) *CommentAPIRequest {
+	switch t := resource.(type) {
+	case *Idea:
+		c.urlFragment = fmt.Sprintf("/ideas/%s/comments", t.ID)
+	case *Feature:
+		c.urlFragment = fmt.Sprintf("/features/%s/comments", t.ID)
+	case *Epic:
+		c.urlFragment = fmt.Sprintf("/epics/%s/comments", t.ID)
+	default:
+		c.Error = fmt.Errorf("unknown resource type: %T", resource)
+	}
+	return c
+}
+
+type CommentRequest struct {
+	Comment Comment `json:"comment"`
+}
+type CommentResponse CommentRequest
+
+func (c *CommentAPIRequest) Create(comment *Comment) error {
+	if c.Error != nil {
+		return c.Error
+	}
+
+	if c.urlFragment == "" {
+		return errors.New("cannot create comment without first calling For()")
+	}
+
+	b, err := json.Marshal(&CommentRequest{Comment: *comment})
+	if err != nil {
+		return err
+	}
+
+	r, err := c.client.newRequest(http.MethodPost, c.urlFragment, bytes.NewBuffer(b))
+	if err != nil {
+		return err
+	}
+
+	var request Request[CommentResponse]
+	request.request = r
+	x, err := request.Do()
+
+	if err == nil && x != nil {
+		*comment = x.Comment
+	}
+	return err
+}
+
+type CommentListResponse struct {
+	Comments []Comment `json:"comments"`
+}
+
+func (c *CommentAPIRequest) List(comments *[]Comment) error {
+	if c.Error != nil {
+		return c.Error
+	}
+
+	if c.urlFragment == "" {
+		return errors.New("cannot create comment without first calling For()")
+	}
+
+	r, err := c.client.newRequest(http.MethodGet, c.urlFragment, nil)
+	if err != nil {
+		return err
+	}
+
+	var request Request[CommentListResponse]
+	request.request = r
+	return request.ForEach(func(resp *CommentListResponse) {
+		*comments = append(*comments, resp.Comments...)
 	})
 }

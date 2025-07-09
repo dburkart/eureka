@@ -81,3 +81,34 @@ type CustomField struct {
 	Value       any       `json:"value,omitempty"`
 	Type        string    `json:"type,omitempty"`
 }
+
+type Comment struct {
+	ID          string        `json:"id,omitempty"`
+	Body        string        `json:"body,omitempty"`
+	CreatedAt   time.Time     `json:"created_at,omitempty"`
+	UpdatedAt   time.Time     `json:"updated_at,omitempty"`
+	User        *User         `json:"user,omitempty"`
+	Attachments []Attachments `json:"attachments,omitempty"`
+	URL         *string       `json:"url,omitempty"`
+	Resource    *string       `json:"resource,omitempty"`
+	Commentable *Commentable  `json:"commentable,omitempty"`
+}
+
+type Attachment struct {
+	ID               string    `json:"id"`
+	DownloadURL      string    `json:"download_url,omitempty"`
+	CreatedAt        time.Time `json:"created_at,omitempty"`
+	UpdatedAt        time.Time `json:"updated_at,omitempty"`
+	OriginalFileSize int       `json:"original_file_size,omitempty"`
+	ContentType      string    `json:"content_type,omitempty"`
+	FileName         string    `json:"file_name,omitempty"`
+	FileSize         int       `json:"file_size,omitempty"`
+}
+
+type Commentable struct {
+	ID        string `json:"id"`
+	Type      string `json:"type,omitempty"`
+	ProductID string `json:"product_id,omitempty"`
+	URL       string `json:"url,omitempty"`
+	Resource  string `json:"resource,omitempty"`
+}
