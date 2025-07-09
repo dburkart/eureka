@@ -114,15 +114,6 @@ type Initiative struct {
 	IntegrationFields []IntegrationField `json:"integration_fields,omitempty"`
 }
 
-type Goal struct {
-	ID          string      `json:"id"`
-	Name        string      `json:"name,omitempty"`
-	URL         string      `json:"url,omitempty"`
-	Resource    string      `json:"resource,omitempty"`
-	CreatedAt   time.Time   `json:"created_at,omitempty"`
-	Description Description `json:"description,omitempty"`
-}
-
 type KeyResult struct {
 	ID             string    `json:"id"`
 	Name           string    `json:"name,omitempty"`
