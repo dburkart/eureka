@@ -15,7 +15,7 @@ type Request[T any] struct {
 	responseFormat T
 }
 
-func (r *Request[T]) Do(t *T) (*T, error) {
+func (r *Request[T]) Do() (*T, error) {
 	var data T
 	response, err := http.DefaultClient.Do(r.request)
 	if err != nil {
@@ -28,21 +28,12 @@ func (r *Request[T]) Do(t *T) (*T, error) {
 		return nil, err
 	}
 
-	if t == nil {
-		err = json.Unmarshal(b, &data)
-		if err != nil {
-			return nil, err
-		}
-
-		return &data, nil
-	} else {
-		err = json.Unmarshal(b, t)
-		if err != nil {
-			return nil, err
-		}
-
-		return t, nil
+	err = json.Unmarshal(b, &data)
+	if err != nil {
+		return nil, err
 	}
+
+	return &data, nil
 }
 
 func (r *Request[T]) DoAll(c chan *T, e chan error) {
@@ -168,8 +159,12 @@ func (c *AhaClient) Products() *ProductAPIRequest {
 	return &ProductAPIRequest{c}
 }
 
+type ProductResponse struct {
+	Product Product `json:"product"`
+}
+
 func (p *ProductAPIRequest) First(product *Product) error {
-	var request Request[Product]
+	var request Request[ProductResponse]
 
 	r, err := p.client.newRequest(http.MethodGet, fmt.Sprintf("products/%s", product.ID), nil)
 	if err != nil {
@@ -177,7 +172,11 @@ func (p *ProductAPIRequest) First(product *Product) error {
 	}
 
 	request.request = r
-	_, err = request.Do(product)
+	x, err := request.Do()
+
+	if err == nil && x != nil {
+		*product = x.Product
+	}
 	return err
 }
 
@@ -219,8 +218,12 @@ func (i *IdeaAPIRequest) For(product *Product) *IdeaAPIRequest {
 	return i
 }
 
+type IdeaResponse struct {
+	Idea Idea `json:"idea"`
+}
+
 func (i *IdeaAPIRequest) First(idea *Idea) error {
-	var request Request[Idea]
+	var request Request[IdeaResponse]
 
 	r, err := i.client.newRequest(http.MethodGet, fmt.Sprintf("ideas/%s", idea.ID), nil)
 	if err != nil {
@@ -228,7 +231,11 @@ func (i *IdeaAPIRequest) First(idea *Idea) error {
 	}
 
 	request.request = r
-	_, err = request.Do(idea)
+	x, err := request.Do()
+
+	if err == nil && x != nil {
+		*idea = x.Idea
+	}
 	return err
 }
 
@@ -267,12 +274,12 @@ func (c *AhaClient) Releases() *ReleaseAPIRequest {
 	return &ReleaseAPIRequest{client: c}
 }
 
-type ReleaseListResponse struct {
-	Releases []Release `json:"releases"`
+type ReleaseResponse struct {
+	Release Release `json:"release"`
 }
 
 func (r *ReleaseAPIRequest) First(release *Release) error {
-	var request Request[Release]
+	var request Request[ReleaseResponse]
 
 	req, err := r.client.newRequest(http.MethodGet, fmt.Sprintf("releases/%s", release.ID), nil)
 	if err != nil {
@@ -280,7 +287,11 @@ func (r *ReleaseAPIRequest) First(release *Release) error {
 	}
 
 	request.request = req
-	_, err = request.Do(release)
+	x, err := request.Do()
+
+	if err == nil && x != nil {
+		*release = x.Release
+	}
 	return err
 }
 
@@ -289,6 +300,10 @@ func (r *ReleaseAPIRequest) For(product *Product) *ReleaseAPIRequest {
 		r.product = product
 	}
 	return r
+}
+
+type ReleaseListResponse struct {
+	Releases []Release `json:"releases"`
 }
 
 func (r *ReleaseAPIRequest) List(releases *[]Release) error {

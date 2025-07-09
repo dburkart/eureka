@@ -29,7 +29,7 @@ func main() {
 		var ideas []eureka.Idea
 		var releases []eureka.Release
 
-		err = client.Ideas().For(&product).List(&ideas)
+		err := client.Ideas().For(&product).List(&ideas)
 
 		if err != nil {
 			slog.Error("ListIdeas error:", err)
