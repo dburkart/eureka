@@ -17,7 +17,7 @@ type Audit struct {
 	AuditableURL   string    `json:"auditable_url"`
 	Changes        []struct {
 		FieldName string `json:"field_name"`
-		Value     string `json:"value"`
+		Value     any    `json:"value"`
 	} `json:"changes"`
 }
 
