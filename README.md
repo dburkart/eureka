@@ -2,8 +2,8 @@
 
 Ergonomic library for the [Aha! API](https://www.aha.io/api).
 
-> [!CAUTION]
-> This library is a Work in Progress, see the To-Do List below.
+> [!NOTE]
+> This library is a public archive, as I am no longer working with the Aha! API.
 
 ## Installing
 
